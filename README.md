@@ -53,7 +53,7 @@ myTv.startApplication(app.get(), "{ \"example\": \"foobaar\" }"::getBytes)
 ## Legacy support
 
 Some server implementations are not compatible with current versions of the DIAL protocol.
-For a backward compatibility create an tweaked ProtocolFactory.
+For backward compatibility create a tweaked ProtocolFactory.
 
 ```
 bool supportLegacyDevices = true;
