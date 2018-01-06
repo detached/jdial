@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:dial-multiscreen-org:schemas:dial"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified" xmlns="urn:dial-multiscreen-org:schemas:dial">
+    <xs:element name="service" type="ServiceType"/>
+    <xs:complexType name="ServiceType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="options" type="optionsType" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="state" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="link" type="linkType" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="additionalData" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="dialVer" type="xs:string" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="optionsType">
+        <xs:attribute name="allowStop" type="xs:boolean" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="linkType" mixed="true">
+        <xs:attribute name="href" use="required" type="xs:anyURI"/>
+        <xs:attribute name="rel" type="xs:string" use="optional"/>
+    </xs:complexType>
+</xs:schema>
