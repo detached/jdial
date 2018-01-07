@@ -6,7 +6,7 @@
 
     <groupId>de.w3is</groupId>
     <artifactId>jdial</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <name>JDial</name>
     <description>A DIAL client implementation in plain java</description>
