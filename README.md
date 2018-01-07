@@ -20,7 +20,7 @@ JDial has no dependencies to any library and can therefore integrated in every p
 List<DialServer> devices = new Discovery().discover();
 ```
 
-## Creat a DielClientConnection
+## Creat a DialClientConnection
 
 ```
 DialServer dialServer = devices.get(0);
@@ -55,7 +55,8 @@ myTv.startApplication(app.get(), "{ \"example\": \"foobaar\" }"::getBytes)
 ## Legacy support
 
 Some server implementations are not compatible with current versions of the DIAL protocol.
-For a backward compatibility create an tweaked ProtocolFactory.
+For example some LG TVs support DIAL, but the server implementation can't handle query parameters.
+By creating a ProtocolFactoryImpl and setting the `legacyCompatibility` flag the client doesn't set any query parameter.
 
 ```
 bool supportLegacyDevices = true;
