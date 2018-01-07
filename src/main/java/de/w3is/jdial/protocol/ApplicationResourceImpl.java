@@ -42,8 +42,8 @@ import java.util.logging.Logger;
 class ApplicationResourceImpl implements ApplicationResource {
 
     private static final Logger LOGGER = Logger.getLogger(ApplicationResourceImpl.class.getName());
-    private static final String APPLICATION_DIAL_VERSION_QUERY = "?clientDialVersion=2.1";
-    private static final String CLIENT_FRIENDLY_NAME_QUERY = "?friendlyName=";
+    private static final String APPLICATION_DIAL_VERSION_QUERY = "clientDialVersion=2.1";
+    private static final String CLIENT_FRIENDLY_NAME_QUERY = "friendlyName";
     private static final String CONTENT_LENGTH_HEADER = "Content-Length";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
 
@@ -65,16 +65,16 @@ class ApplicationResourceImpl implements ApplicationResource {
     @Override
     public Optional<Application> getApplication(String applicationName) throws IOException {
 
-        URL applicationUrl;
+        URLBuilder applicationUrl = URLBuilder.of(rootUrl).path(applicationName);
 
         if (sendQueryParameter) {
-            applicationUrl = new URL(rootUrl, applicationName + APPLICATION_DIAL_VERSION_QUERY);
-        } else {
-            applicationUrl = new URL(rootUrl, applicationName);
+
+            applicationUrl.query(APPLICATION_DIAL_VERSION_QUERY);
         }
 
-        HttpURLConnection httpUrlConnection = (HttpURLConnection) applicationUrl.openConnection();
+        HttpURLConnection httpUrlConnection = (HttpURLConnection) applicationUrl.build().openConnection();
         addTimeoutParameter(httpUrlConnection);
+        httpUrlConnection.setDoInput(true);
 
         if (httpUrlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
 
@@ -125,24 +125,26 @@ class ApplicationResourceImpl implements ApplicationResource {
     @Override
     public Optional<URL> startApplication(String applicationName, DialContent dialContent) throws IOException, ApplicationResourceException {
 
-        URL applicationUrl;
+        URLBuilder applicationUrl = URLBuilder.of(rootUrl).path(applicationName);
 
-        if (clientFriendlyName == null || !sendQueryParameter) {
-            applicationUrl = new URL(rootUrl, applicationName);
-        } else {
-            applicationUrl = new URL(rootUrl, applicationName + CLIENT_FRIENDLY_NAME_QUERY + clientFriendlyName);
+        if (clientFriendlyName != null && sendQueryParameter) {
+            applicationUrl.query(CLIENT_FRIENDLY_NAME_QUERY, clientFriendlyName);
         }
 
-        HttpURLConnection httpURLConnection = (HttpURLConnection) applicationUrl.openConnection();
+        HttpURLConnection httpURLConnection = (HttpURLConnection) applicationUrl.build().openConnection();
         httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setDoOutput(true);
+
         addTimeoutParameter(httpURLConnection);
 
         if (dialContent.getData() == null) {
 
             httpURLConnection.setRequestProperty(CONTENT_LENGTH_HEADER, "0");
+
+            // HttpURLConnection will not send headers if the outputStream not getting opened.
+            httpURLConnection.getOutputStream().close();
         } else {
 
-            httpURLConnection.setDoOutput(true);
             httpURLConnection.setRequestProperty(CONTENT_LENGTH_HEADER, String.valueOf(dialContent.getData().length));
             httpURLConnection.setRequestProperty(CONTENT_TYPE_HEADER, dialContent.getContentType());
 
@@ -186,7 +188,7 @@ class ApplicationResourceImpl implements ApplicationResource {
     @Override
     public void hideApplication(URL instanceURL) throws IOException, ApplicationResourceException {
 
-        URL hidingUrl = new URL(instanceURL, instanceURL.getPath() + "/hide");
+        URL hidingUrl = URLBuilder.of(instanceURL).path("hide").build();
         HttpURLConnection httpURLConnection = (HttpURLConnection) hidingUrl.openConnection();
         addTimeoutParameter(httpURLConnection);
         httpURLConnection.setRequestMethod("POST");
@@ -205,7 +207,7 @@ class ApplicationResourceImpl implements ApplicationResource {
             return null;
         }
 
-        return new URL(rootUrl, applicationName + "/" + link.getHref());
+        return URLBuilder.of(rootUrl).path(applicationName).path(link.getHref()).build();
     }
 
     private URL getInstallUrl(String state) throws MalformedURLException {
