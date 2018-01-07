@@ -22,6 +22,7 @@ import de.w3is.jdial.model.DialServer;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +45,6 @@ class MSearchImpl implements MSearch {
     private static final String SERVER_HEADER = "SERVER";
     private static final String WOL_MAC = "MAC";
     private static final String WOL_TIMEOUT = "TIMEOUT";
-    private static final String CHARSET_UTF8 = "UTF-8";
 
     private final String msearchRequest;
     private final int socketTimeoutMs;
@@ -66,7 +66,7 @@ class MSearchImpl implements MSearch {
 
         InetAddress inetAddress = InetAddress.getByName(MULTICAST_IP);
 
-        byte[] requestBuffer = msearchRequest.getBytes(CHARSET_UTF8);
+        byte[] requestBuffer = msearchRequest.getBytes(StandardCharsets.UTF_8);
 
         DatagramPacket requestPacket = new DatagramPacket(requestBuffer, requestBuffer.length, inetAddress, MULTICAST_PORT);
 
@@ -105,7 +105,7 @@ class MSearchImpl implements MSearch {
 
     private Optional<DialServer> toDevice(DatagramPacket packet) throws UnsupportedEncodingException {
 
-        String data = new String(packet.getData(), CHARSET_UTF8);
+        String data = new String(packet.getData(), StandardCharsets.UTF_8);
 
         if (!data.contains(SEARCH_TARGET_HEADER_VALUE)) {
 
