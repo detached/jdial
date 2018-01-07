@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service xmlns="urn:dial-multiscreen-org:schemas:dial">
+    <name>applicationName</name>
+    <options allowStop="true"/>
+    <state>stopped</state>
+    <link rel="run" href="run"/>
+    <additionalData>
+        <screenId>screenIdValue</screenId>
+    </additionalData>
+</service>
