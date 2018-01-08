@@ -14,6 +14,27 @@ A list of reserved application names can also be found on the [dial-multiscreen.
 
 JDial has no dependencies to any library and can therefore integrated in every program and app.
 
+# Dependency declaration
+
+You can find the latest releaese in the [central repository](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.w3is%22%20a%3A%22jdial%22).
+
+## Maven
+
+```
+<dependency>
+    <groupId>de.w3is</groupId>
+    <artifactId>jdial</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+## Gradle
+
+```
+compile 'de.w3is:jdial:1.0'
+```
+
+# Usage
+
 ## Discover
 
 ```
