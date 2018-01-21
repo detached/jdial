@@ -1,9 +1,6 @@
 package de.w3is.jdial;
 
-import de.w3is.jdial.model.Application;
-import de.w3is.jdial.model.DialClientException;
-import de.w3is.jdial.model.DialServer;
-import de.w3is.jdial.model.State;
+import de.w3is.jdial.model.*;
 import de.w3is.jdial.protocol.ProtocolFactoryImpl;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
@@ -11,6 +8,7 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,10 +24,22 @@ class DialApplicationTest {
 
         DialClientConnection myTv = discoverMyTv();
 
-        Optional<Application> youtube = myTv.getApplication(Application.YOUTUBE);
-        assertThat(youtube).isPresent();
+        Application youtube = myTv.getApplication(Application.YOUTUBE);
+        assertThat(youtube).isNotNull();
 
-        assertThat(myTv.startApplication(youtube.get(), "{}"::getBytes)).isPresent();
+        DialContent content = new DialContent() {
+            @Override
+            public String getContentType() {
+                return "application/json; encoding=UTF-8";
+            }
+
+            @Override
+            public byte[] getData() {
+                return "{}".getBytes(Charset.defaultCharset());
+            }
+        };
+
+        assertThat(myTv.startApplication(youtube, content)).isNotNull();
     }
 
     @Test
@@ -37,10 +47,8 @@ class DialApplicationTest {
 
         DialClientConnection myTv = discoverMyTv();
 
-        Optional<Application> app = myTv.getApplication(Application.YOUTUBE);
-        assertThat(app).isPresent();
-
-        Application youtube = app.get();
+        Application youtube = myTv.getApplication(Application.YOUTUBE);
+        assertThat(youtube).isNotNull();
 
         assertThat(youtube.getState()).isEqualTo(State.RUNNING);
         myTv.stopApplication(youtube);
@@ -51,10 +59,8 @@ class DialApplicationTest {
 
         DialClientConnection myTv = discoverMyTv();
 
-        Optional<Application> app = myTv.getApplication(Application.YOUTUBE);
-        assertThat(app).isPresent();
-
-        Application youtube = app.get();
+        Application youtube = myTv.getApplication(Application.YOUTUBE);
+        assertThat(youtube).isNotNull();
 
         assertThat(youtube.getState()).isEqualTo(State.RUNNING);
 

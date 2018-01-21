@@ -25,9 +25,7 @@ package de.w3is.jdial.model;
  */
 public interface DialContent {
 
-    default String getContentType() {
-        return "text/plain; charset=UTF-8";
-    }
+    String getContentType();
 
     byte[] getData();
 }

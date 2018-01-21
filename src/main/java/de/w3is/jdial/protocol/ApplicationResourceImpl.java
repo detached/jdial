@@ -34,7 +34,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,7 +51,17 @@ class ApplicationResourceImpl implements ApplicationResource {
     private static final String CONTENT_LENGTH_HEADER = "Content-Length";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
 
-    private static final DialContent NO_CONTENT = () -> null;
+    private static final DialContent NO_CONTENT = new DialContent() {
+        @Override
+        public String getContentType() {
+            return null;
+        }
+
+        @Override
+        public byte[] getData() {
+            return null;
+        }
+    };
 
     private final String clientFriendlyName;
     private final URL rootUrl;
@@ -68,7 +77,7 @@ class ApplicationResourceImpl implements ApplicationResource {
     }
 
     @Override
-    public Optional<Application> getApplication(String applicationName) throws IOException {
+    public Application getApplication(String applicationName) throws IOException {
 
         URLBuilder applicationUrl = URLBuilder.of(rootUrl).path(applicationName);
 
@@ -84,7 +93,7 @@ class ApplicationResourceImpl implements ApplicationResource {
         if (httpUrlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
 
             LOGGER.log(Level.FINE, "Application not found: ", httpUrlConnection.getResponseCode());
-            return Optional.empty();
+            return null;
         }
 
         try (InputStream inputStream = httpUrlConnection.getInputStream()) {
@@ -99,23 +108,23 @@ class ApplicationResourceImpl implements ApplicationResource {
 
             extractState(serviceDocument, application);
 
-            return Optional.of(application);
+            return application;
 
         } catch (ParserConfigurationException | SAXException | ApplicationResourceException e) {
 
             LOGGER.log(Level.WARNING, "Can't parse body xml", e);
-            return Optional.empty();
+            return null;
         }
     }
 
     @Override
-    public Optional<URL> startApplication(String applicationName) throws IOException, ApplicationResourceException {
+    public URL startApplication(String applicationName) throws IOException, ApplicationResourceException {
 
         return startApplication(applicationName, NO_CONTENT);
     }
 
     @Override
-    public Optional<URL> startApplication(String applicationName, DialContent dialContent) throws IOException, ApplicationResourceException {
+    public URL startApplication(String applicationName, DialContent dialContent) throws IOException, ApplicationResourceException {
 
         URLBuilder applicationUrl = URLBuilder.of(rootUrl).path(applicationName);
 
@@ -153,10 +162,10 @@ class ApplicationResourceImpl implements ApplicationResource {
 
             if (instanceLocation != null) {
 
-                return Optional.of(new URL(instanceLocation));
+                return new URL(instanceLocation);
             } else {
 
-                return Optional.empty();
+                return null;
             }
         } else {
 

@@ -19,7 +19,6 @@ package de.w3is.jdial.protocol;
 
 import de.w3is.jdial.protocol.model.DeviceDescriptor;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -29,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +43,7 @@ class DeviceDescriptorResourceImpl implements DeviceDescriptorResource {
     private static final String APPLICATION_URL_HEADER = "Application-URL";
 
     @Override
-    public Optional<DeviceDescriptor> getDescriptor(URL deviceDescriptorLocation) throws IOException {
+    public DeviceDescriptor getDescriptor(URL deviceDescriptorLocation) throws IOException {
 
         if (deviceDescriptorLocation == null) {
 
@@ -55,7 +53,7 @@ class DeviceDescriptorResourceImpl implements DeviceDescriptorResource {
         if (!deviceDescriptorLocation.getProtocol().equals("http")) {
 
             LOGGER.log(Level.WARNING, "Only http is supported for device descriptor resolution");
-            return Optional.empty();
+            return null;
         }
 
         HttpURLConnection connection = (HttpURLConnection) deviceDescriptorLocation.openConnection();
@@ -63,7 +61,7 @@ class DeviceDescriptorResourceImpl implements DeviceDescriptorResource {
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
 
             LOGGER.log(Level.WARNING, "Could not get device descriptor: " + connection.getResponseCode());
-            return Optional.empty();
+            return null;
         }
 
         String applicationUrl = connection.getHeaderField(APPLICATION_URL_HEADER);
@@ -71,7 +69,7 @@ class DeviceDescriptorResourceImpl implements DeviceDescriptorResource {
         if (applicationUrl == null) {
 
             LOGGER.log(Level.WARNING, "Server didn't return applicationUrl");
-            return Optional.empty();
+            return null;
         }
 
         DeviceDescriptor deviceDescriptor = new DeviceDescriptor();
@@ -79,7 +77,7 @@ class DeviceDescriptorResourceImpl implements DeviceDescriptorResource {
 
         readInfoFromBody(connection, deviceDescriptor);
 
-        return Optional.of(deviceDescriptor);
+        return deviceDescriptor;
     }
 
     private void readInfoFromBody(HttpURLConnection connection, DeviceDescriptor deviceDescriptor) throws IOException {

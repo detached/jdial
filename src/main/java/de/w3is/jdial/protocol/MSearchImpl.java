@@ -87,12 +87,14 @@ class MSearchImpl implements MSearch {
                 DatagramPacket responsePacket = new DatagramPacket(responseBuffer, responseBuffer.length);
                 socket.receive(responsePacket);
 
-                toDevice(responsePacket).ifPresent((device) -> {
-                    if (!discoveredDevicesByNames.containsKey(device.getUniqueServiceName())) {
-                        LOGGER.log(Level.FINE, "Found device: " + device.toString());
-                        discoveredDevicesByNames.put(device.getUniqueServiceName(), device);
+                DialServer dialServer = toServer(responsePacket);
+
+                if (dialServer != null) {
+                    if (!discoveredDevicesByNames.containsKey(dialServer.getUniqueServiceName())) {
+                        LOGGER.log(Level.FINE, "Found device: " + dialServer.toString());
+                        discoveredDevicesByNames.put(dialServer.getUniqueServiceName(), dialServer);
                     }
-                });
+                }
 
             }
         } catch (SocketTimeoutException e) {
@@ -103,14 +105,14 @@ class MSearchImpl implements MSearch {
         return new ArrayList<>(discoveredDevicesByNames.values());
     }
 
-    private Optional<DialServer> toDevice(DatagramPacket packet) throws UnsupportedEncodingException {
+    private DialServer toServer(DatagramPacket packet) {
 
         String data = new String(packet.getData(), StandardCharsets.UTF_8);
 
         if (!data.contains(SEARCH_TARGET_HEADER_VALUE)) {
 
             LOGGER.log(Level.FINER, "Ignore response for unrelated search target: " + data);
-            return Optional.empty();
+            return null;
         }
 
         String[] dataRows = data.split("\n");
@@ -146,11 +148,11 @@ class MSearchImpl implements MSearch {
         if (dialServer.getDeviceDescriptorUrl() != null
                 && dialServer.getUniqueServiceName() != null && dialServer.getUniqueServiceName().length() > 0) {
 
-            return Optional.of(dialServer);
+            return dialServer;
         } else {
 
             LOGGER.log(Level.FINER, "Ignore package with incomplete data: " + data);
-            return Optional.empty();
+            return null;
         }
     }
 

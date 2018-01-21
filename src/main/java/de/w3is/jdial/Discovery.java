@@ -19,13 +19,13 @@ package de.w3is.jdial;
 
 import de.w3is.jdial.model.DialServer;
 import de.w3is.jdial.protocol.ProtocolFactory;
+import de.w3is.jdial.protocol.ProtocolFactoryImpl;
 import de.w3is.jdial.protocol.model.DeviceDescriptor;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +45,7 @@ public class Discovery {
     }
 
     public Discovery() {
-        this(ProtocolFactory.createInstance());
+        this(new ProtocolFactoryImpl(false));
     }
 
     /**
@@ -77,12 +77,10 @@ public class Discovery {
 
             try {
 
-                Optional<DeviceDescriptor> optionalDescriptor
+                DeviceDescriptor descriptor
                         = protocolFactory.createDeviceDescriptorResource().getDescriptor(device.getDeviceDescriptorUrl());
 
-                if (optionalDescriptor.isPresent()) {
-
-                    DeviceDescriptor descriptor = optionalDescriptor.get();
+                if (descriptor != null) {
 
                     device.setFriendlyName(descriptor.getFriendlyName());
                     device.setApplicationResourceUrl(descriptor.getApplicationResourceUrl());
