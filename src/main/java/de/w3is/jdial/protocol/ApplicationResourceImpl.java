@@ -21,12 +21,15 @@ import de.w3is.jdial.model.Application;
 import de.w3is.jdial.model.DialContent;
 import de.w3is.jdial.model.State;
 import de.w3is.jdial.protocol.model.ApplicationResourceException;
-import de.w3is.jdial.protocol.model.generated.LinkType;
-import de.w3is.jdial.protocol.model.generated.ServiceType;
 import lombok.Data;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXB;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -34,6 +37,8 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static de.w3is.jdial.protocol.XMLUtil.getTextFromSub;
 
 /**
  * @author Simon Weis
@@ -82,38 +87,25 @@ class ApplicationResourceImpl implements ApplicationResource {
             return Optional.empty();
         }
 
-        ServiceType service = JAXB.unmarshal(httpUrlConnection.getInputStream(), ServiceType.class);
+        try (InputStream inputStream = httpUrlConnection.getInputStream()) {
 
-        Application application = new Application();
+            Document serviceDocument = getServiceDocument(inputStream);
 
-        try {
+            Application application = new Application();
+            application.setName(getTextFromSub(serviceDocument, "name"));
+            application.setInstanceUrl(getInstanceUrl(serviceDocument, application.getName()));
+            application.setAllowStop(getIsAllowStopFromOption(serviceDocument));
+            application.setAdditionalData(extractAdditionalData(serviceDocument));
 
-            application.setName(service.getName());
-            application.setState(mapToState(service.getState()));
+            extractState(serviceDocument, application);
 
-            if (application.getState() == State.INSTALLABLE) {
-                application.setInstallUrl(getInstallUrl(service.getState()));
-            }
+            return Optional.of(application);
 
-            if (service.getOptions() != null) {
-                application.setAllowStop(service.getOptions().isAllowStop() == null ? false : service.getOptions().isAllowStop());
-            }
+        } catch (ParserConfigurationException | SAXException | ApplicationResourceException e) {
 
-            if (service.getLink() != null) {
-                application.setInstanceUrl(getInstanceUrl(applicationName, service.getLink()));
-            }
-
-            if (service.getAdditionalData() != null) {
-                application.setAdditionalData(service.getAdditionalData().getAny());
-            }
-
-        } catch (ApplicationResourceException e) {
-
-            LOGGER.log(Level.WARNING, "Error while parsing ApplicationResource response: ", e);
+            LOGGER.log(Level.WARNING, "Can't parse body xml", e);
             return Optional.empty();
         }
-
-        return Optional.of(application);
     }
 
     @Override
@@ -199,15 +191,73 @@ class ApplicationResourceImpl implements ApplicationResource {
         }
     }
 
-    private URL getInstanceUrl(String applicationName, LinkType link) throws MalformedURLException {
+    private Document getServiceDocument(InputStream inputStream) throws IOException, ParserConfigurationException, SAXException {
 
-        if (!"run".equals(link.getRel())) {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse(inputStream);
 
-            LOGGER.log(Level.WARNING, "Unknown link type on service: " + link.getRel());
-            return null;
+        document.getDocumentElement().normalize();
+
+        return document;
+    }
+
+    private Node extractAdditionalData(Document document) {
+
+        NodeList nodes = document.getElementsByTagName("additionalData");
+
+        if (nodes.getLength() >= 1) {
+
+            return nodes.item(0);
         }
 
-        return URLBuilder.of(rootUrl).path(applicationName).path(link.getHref()).build();
+        return null;
+    }
+
+    private boolean getIsAllowStopFromOption(Document document) {
+
+        NodeList nodes = document.getElementsByTagName("options");
+
+        if (nodes.getLength() < 1) {
+            return false;
+        }
+
+        NamedNodeMap optionAttributes = nodes.item(0).getAttributes();
+        Node allowStop = optionAttributes.getNamedItem("allowStop");
+
+        return allowStop != null && Boolean.parseBoolean(allowStop.getTextContent());
+    }
+
+    private URL getInstanceUrl(Document document, String applicationName) throws MalformedURLException, ApplicationResourceException {
+
+        NodeList nodes = document.getElementsByTagName("link");
+
+        if (nodes.getLength() < 1) {
+            throw new ApplicationResourceException("Document has no link element");
+        }
+
+        NamedNodeMap linkAttributes = nodes.item(0).getAttributes();
+        Node href = linkAttributes.getNamedItem("href");
+        Node rel = linkAttributes.getNamedItem("rel");
+
+        if (rel == null || href == null || !rel.getTextContent().equals("run")) {
+
+            throw new ApplicationResourceException("Unknown link type on service");
+        }
+
+        return URLBuilder.of(rootUrl).path(applicationName).path(href.getTextContent()).build();
+    }
+
+    private void extractState(Document document, Application application) throws ApplicationResourceException, MalformedURLException {
+
+        String stateText = getTextFromSub(document, "state");
+
+        State state = mapToState(stateText);
+        application.setState(state);
+
+        if (state == State.INSTALLABLE) {
+            application.setInstallUrl(getInstallUrl(stateText));
+        }
     }
 
     private URL getInstallUrl(String state) throws MalformedURLException {
