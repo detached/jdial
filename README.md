@@ -24,13 +24,13 @@ You can find the latest releaese in the [central repository](https://search.mave
 <dependency>
     <groupId>de.w3is</groupId>
     <artifactId>jdial</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 ## Gradle
 
 ```
-compile 'de.w3is:jdial:1.1'
+compile 'de.w3is:jdial:1.2'
 ```
 
 # Usage
@@ -53,24 +53,39 @@ DialClientConnection tv = dialClient.connectTo(dialServer);
 ## Discover applications
 
 ```
-Optional<Application> app = tv.getApplication(Application.YOUTUBE);
+Application youtube = tv.getApplication(Application.YOUTUBE);
 ```
 
 ## Start applications
 
 ```
-tv.startApplication(app.get());
+tv.startApplication(youtube);
 ```
 
 ## Stop applications
 
 ```
-tv.stopApplication(app.get());
+tv.stopApplication(youtube);
 ```
 
 ## Implement application vendor protocol
 ```
-myTv.startApplication(app.get(), "{ \"example\": \"foobaar\" }"::getBytes)
+
+ DialContent content = new DialContent() {
+ 
+     @Override
+     public String getContentType() {
+         return "application/json; encoding=UTF-8";
+     }
+
+     @Override
+     public byte[] getData() {
+          return "{}".getBytes(Charset.forName("UTF-8"));
+     }
+ };
+
+
+myTv.startApplication(youtube, content)
 ```
 
 ## Legacy support
