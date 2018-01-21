@@ -14,7 +14,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -41,7 +40,7 @@ class DiscoveryTest {
         when(mSearch.sendAndReceive()).thenReturn(Collections.singletonList(device));
 
         DeviceDescriptorResource deviceDescriptorResource = mock(DeviceDescriptorResource.class);
-        when(deviceDescriptorResource.getDescriptor(device.getDeviceDescriptorUrl())).thenReturn(Optional.of(descriptor));
+        when(deviceDescriptorResource.getDescriptor(device.getDeviceDescriptorUrl())).thenReturn(descriptor);
 
         ProtocolFactory protocolFactory = createFactoryOf(mSearch, deviceDescriptorResource);
 
@@ -90,8 +89,8 @@ class DiscoveryTest {
         when(mSearch.sendAndReceive()).thenReturn(dialServers);
 
         DeviceDescriptorResource deviceDescriptorResource = mock(DeviceDescriptorResource.class);
-        when(deviceDescriptorResource.getDescriptor(device1.getDeviceDescriptorUrl())).thenReturn(Optional.of(descriptor));
-        when(deviceDescriptorResource.getDescriptor(device2.getDeviceDescriptorUrl())).thenReturn(Optional.empty());
+        when(deviceDescriptorResource.getDescriptor(device1.getDeviceDescriptorUrl())).thenReturn(descriptor);
+        when(deviceDescriptorResource.getDescriptor(device2.getDeviceDescriptorUrl())).thenReturn(null);
 
         ProtocolFactory protocolFactory = createFactoryOf(mSearch, deviceDescriptorResource);
 
@@ -101,7 +100,7 @@ class DiscoveryTest {
         assertThat(discoveredDevices.get(0).getDeviceDescriptorUrl()).isEqualTo(device1.getDeviceDescriptorUrl());
     }
 
-    private ProtocolFactory createFactoryOf(MSearch mSearch, DeviceDescriptorResource deviceDescriptorResource) {
+    private ProtocolFactory createFactoryOf(final MSearch mSearch, final DeviceDescriptorResource deviceDescriptorResource) {
 
         return new ProtocolFactory() {
             @Override

@@ -24,10 +24,6 @@ import java.net.URL;
  */
 public interface ProtocolFactory {
 
-    static ProtocolFactory createInstance() {
-        return new ProtocolFactoryImpl(false);
-    }
-
     MSearch createMSearch();
 
     DeviceDescriptorResource createDeviceDescriptorResource();

@@ -53,7 +53,7 @@ public class DialClientConnection {
      */
     public boolean supportsApplication(String applicationName) {
 
-        return getApplication(applicationName).isPresent();
+        return getApplication(applicationName) != null;
     }
 
     /**
@@ -62,7 +62,7 @@ public class DialClientConnection {
      * @param applicationName The name of the application
      * @return An instance of the Application
      */
-    public Optional<Application> getApplication(String applicationName) {
+    public Application getApplication(String applicationName) {
 
         try {
 
@@ -70,7 +70,7 @@ public class DialClientConnection {
         } catch (IOException e) {
 
             LOGGER.log(Level.WARNING, "IOException while getting application", e);
-            return Optional.empty();
+            return null;
         }
     }
 
@@ -81,7 +81,7 @@ public class DialClientConnection {
      * @return An url to the started instance if the server provides one
      * @throws DialClientException In case of an network or protocol error
      */
-    public Optional<URL> startApplication(Application application) throws DialClientException {
+    public URL startApplication(Application application) throws DialClientException {
 
         return startApplication(application.getName());
     }
@@ -93,7 +93,7 @@ public class DialClientConnection {
      * @return An url to the started instance if the server provides one
      * @throws DialClientException In case of an network or protocol error
      */
-    public Optional<URL> startApplication(Application application, DialContent dialContent) throws DialClientException {
+    public URL startApplication(Application application, DialContent dialContent) throws DialClientException {
 
         return startApplication(application.getName(), dialContent);
     }
@@ -105,7 +105,7 @@ public class DialClientConnection {
      * @return An url to the started instance if the server provides one
      * @throws DialClientException In case of an network or protocol error
      */
-    public Optional<URL> startApplication(String applicationName) throws DialClientException {
+    public URL startApplication(String applicationName) throws DialClientException {
 
         try {
             return applicationResource.startApplication(applicationName);
@@ -124,7 +124,7 @@ public class DialClientConnection {
      * @return An url to the started instance if the server provides one
      * @throws DialClientException In case of an network or protocol error
      */
-    public Optional<URL> startApplication(String applicationName, DialContent dialContent) throws DialClientException {
+    public URL startApplication(String applicationName, DialContent dialContent) throws DialClientException {
 
         try {
 

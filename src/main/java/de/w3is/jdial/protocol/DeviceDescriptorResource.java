@@ -28,5 +28,5 @@ import java.util.Optional;
  */
 public interface DeviceDescriptorResource {
 
-    Optional<DeviceDescriptor> getDescriptor(URL deviceDescriptorLocation) throws IOException;
+    DeviceDescriptor getDescriptor(URL deviceDescriptorLocation) throws IOException;
 }

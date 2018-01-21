@@ -30,11 +30,11 @@ import java.util.Optional;
  */
 public interface ApplicationResource {
 
-    Optional<Application> getApplication(String applicationName) throws IOException;
+    Application getApplication(String applicationName) throws IOException;
 
-    Optional<URL> startApplication(String applicationName) throws IOException, ApplicationResourceException;
+    URL startApplication(String applicationName) throws IOException, ApplicationResourceException;
 
-    Optional<URL> startApplication(String applicationName, DialContent dialContent) throws IOException, ApplicationResourceException;
+    URL startApplication(String applicationName, DialContent dialContent) throws IOException, ApplicationResourceException;
 
     void stopApplication(URL instanceUrl) throws IOException, ApplicationResourceException;
 

@@ -19,6 +19,7 @@ package de.w3is.jdial;
 
 import de.w3is.jdial.model.DialServer;
 import de.w3is.jdial.protocol.ProtocolFactory;
+import de.w3is.jdial.protocol.ProtocolFactoryImpl;
 import lombok.Data;
 
 /**
@@ -39,7 +40,7 @@ public class DialClient {
     }
 
     public DialClient() {
-        this(ProtocolFactory.createInstance());
+        this(new ProtocolFactoryImpl(false));
     }
 
     /**
