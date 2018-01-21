@@ -51,10 +51,10 @@ class DialClientTest {
 
         assertThat(application).isPresent().hasValueSatisfying((app) -> {
            assertThat(app.getState()).isEqualTo(State.STOPPED);
-           assertThat(app.getInstanceUrl().toString()).isEqualTo("http://localhost:8080/resource/app/run");
+           assertThat(app.getInstanceUrl().toString()).isEqualTo("http://localhost:8080/resource/applicationName/run");
            assertThat(app.getName()).isEqualTo("applicationName");
            assertThat(app.getInstallUrl()).isNull();
-           assertThat(app.getAdditionalData()).isNotEmpty();
+           assertThat(app.getAdditionalData()).isNotNull();
         });
 
         MOCK_SERVER.verify(getRequestedFor(urlPathEqualTo("/resource/app"))
@@ -77,10 +77,10 @@ class DialClientTest {
 
         assertThat(application).isPresent().hasValueSatisfying((app) -> {
             assertThat(app.getState()).isEqualTo(State.STOPPED);
-            assertThat(app.getInstanceUrl().toString()).isEqualTo("http://localhost:8080/resource/app/run");
+            assertThat(app.getInstanceUrl().toString()).isEqualTo("http://localhost:8080/resource/applicationName/run");
             assertThat(app.getName()).isEqualTo("applicationName");
             assertThat(app.getInstallUrl()).isNull();
-            assertThat(app.getAdditionalData()).isNotEmpty();
+            assertThat(app.getAdditionalData()).isNotNull();
         });
 
         MOCK_SERVER.verify(getRequestedFor(urlPathEqualTo("/resource/app")));

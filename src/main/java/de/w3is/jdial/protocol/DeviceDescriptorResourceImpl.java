@@ -33,6 +33,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static de.w3is.jdial.protocol.XMLUtil.getTextFromSub;
+
 /**
  * @author Simon Weis
  */
@@ -96,16 +98,5 @@ class DeviceDescriptorResourceImpl implements DeviceDescriptorResource {
 
             LOGGER.log(Level.WARNING, "Error while parsing device descriptor:", e);
         }
-    }
-
-    private String getTextFromSub(Document element, String tagName) {
-
-        NodeList elementsByTagName = element.getElementsByTagName(tagName);
-
-        if (elementsByTagName.getLength() >= 1) {
-            return elementsByTagName.item(0).getTextContent();
-        }
-
-        return "";
     }
 }

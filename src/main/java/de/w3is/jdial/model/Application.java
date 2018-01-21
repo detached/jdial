@@ -18,10 +18,10 @@
 package de.w3is.jdial.model;
 
 import lombok.Data;
+import org.w3c.dom.Node;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.util.List;
 
 /**
  * The Application class represents an app that can be
@@ -58,5 +58,5 @@ public class Application implements Serializable {
     private URL instanceUrl;
 
     // Additional data defined by the app author.
-    private List<Object> additionalData;
+    private Node additionalData;
 }

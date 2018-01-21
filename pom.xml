@@ -24,7 +24,6 @@
         <mockito-core.version>2.13.0</mockito-core.version>
         <wiremock.version>2.13.0</wiremock.version>
 
-        <jaxb2-maven-plugin.version>2.3.1</jaxb2-maven-plugin.version>
         <maven-surefire-plugin.version>2.19</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
@@ -124,22 +123,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>${jaxb2-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>xjc</id>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <packageName>de.w3is.jdial.protocol.model.generated</packageName>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
