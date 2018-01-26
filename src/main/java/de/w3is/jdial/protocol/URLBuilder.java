@@ -19,7 +19,6 @@ package de.w3is.jdial.protocol;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
 
 /**
  * @author Simon Weis
@@ -36,8 +35,8 @@ class URLBuilder {
     private String host = "localhost";
     private int port = 80;
 
-    private StringJoiner paths = new StringJoiner(PATH_SEPARATOR);
-    private StringJoiner query = new StringJoiner(QUERY_SEPARATOR);
+    private StringBuilder paths = new StringBuilder();
+    private StringBuilder query = new StringBuilder();
 
     private URLBuilder() {}
 
@@ -66,40 +65,56 @@ class URLBuilder {
         return this;
     }
 
-    URLBuilder host(String host) {
+    private URLBuilder host(String host) {
         this.host = host;
         return this;
     }
 
-    URLBuilder port(int port) {
+    private URLBuilder port(int port) {
         this.port = port;
         return this;
     }
 
     URLBuilder path(String path) {
-        this.paths.add(path);
+
+        if (paths.length() != 0) {
+            this.paths.append(PATH_SEPARATOR);
+        }
+
+        this.paths.append(path);
         return this;
     }
 
-    URLBuilder query(String key, String value) {
-        this.query.add(key + QUERY_KEY_VALUE_SEPARATOR + value);
-        return this;
+    void query(String key, String value) {
+
+        appendQueryOrPathSeparator();
+
+        this.query.append(key).append(QUERY_KEY_VALUE_SEPARATOR).append(value);
+
     }
 
-    URLBuilder query(String queryPart) {
-        this.query.add(queryPart);
-        return this;
+    void query(String queryPart) {
+
+        appendQueryOrPathSeparator();
+
+        this.query.append(QUERY_SEPARATOR).append(queryPart);
     }
 
     URL build() throws MalformedURLException {
 
-        String joinedPaths = paths.toString();
-        String joinedQueries = query.toString();
+        String joinedPath = paths.toString() + query.toString();
 
-        if (!joinedQueries.isEmpty()) {
-            joinedPaths = joinedPaths + PATH_QUERY_SEPARATOR + joinedQueries;
+        return new URL(protocol, host, port, joinedPath);
+    }
+
+    private void appendQueryOrPathSeparator() {
+
+        if (this.query.length() == 0) {
+
+            this.query.append(PATH_QUERY_SEPARATOR);
+        } else {
+
+            this.query.append(QUERY_SEPARATOR);
         }
-
-        return new URL(protocol, host, port, joinedPaths);
     }
 }
