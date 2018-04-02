@@ -17,13 +17,12 @@
 
 package de.w3is.jdial.protocol;
 
+import java.io.IOException;
+import java.net.URL;
+
 import de.w3is.jdial.model.Application;
 import de.w3is.jdial.model.DialContent;
 import de.w3is.jdial.protocol.model.ApplicationResourceException;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Optional;
 
 /**
  * @author Simon Weis

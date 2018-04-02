@@ -17,11 +17,10 @@
 
 package de.w3is.jdial.protocol;
 
-import de.w3is.jdial.protocol.model.DeviceDescriptor;
-
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
+
+import de.w3is.jdial.protocol.model.DeviceDescriptor;
 
 /**
  * @author Simon Weis

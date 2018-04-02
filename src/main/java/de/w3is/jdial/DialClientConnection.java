@@ -17,18 +17,17 @@
 
 package de.w3is.jdial;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import de.w3is.jdial.model.Application;
 import de.w3is.jdial.model.DialClientException;
 import de.w3is.jdial.model.DialContent;
 import de.w3is.jdial.model.State;
 import de.w3is.jdial.protocol.ApplicationResource;
 import de.w3is.jdial.protocol.model.ApplicationResourceException;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A connection for interacting with a dial server.
@@ -121,6 +120,7 @@ public class DialClientConnection {
      * Start an application by name and provide additional data to send to the server
      *
      * @param applicationName The name of the application
+     * @param dialContent The additional data to send
      * @return An url to the started instance if the server provides one
      * @throws DialClientException In case of an network or protocol error
      */
