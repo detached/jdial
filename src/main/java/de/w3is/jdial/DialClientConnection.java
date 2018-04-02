@@ -120,6 +120,7 @@ public class DialClientConnection {
      * Start an application by name and provide additional data to send to the server
      *
      * @param applicationName The name of the application
+     * @param dialContent The additional data to send
      * @return An url to the started instance if the server provides one
      * @throws DialClientException In case of an network or protocol error
      */
