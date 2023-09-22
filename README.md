@@ -1,7 +1,5 @@
 # JDial
 
-[![CircleCI](https://circleci.com/gh/detached/jdial/tree/master.svg?style=svg)](https://circleci.com/gh/detached/jdial/tree/master)
-
 JDial is an plain java implementation of the Discovery and Launch (DIAL) protocol version 2.1 defined by Netflix and YouTube.
 
 DIAL allows second screen devices (smartphone, laptop, ...) to discover server instances in the local network and 
