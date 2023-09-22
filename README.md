@@ -10,7 +10,7 @@ and [dial-multiscreen.org](http://www.dial-multiscreen.org).
 
 A list of reserved application names can also be found on the [dial-multiscreen.org](http://www.dial-multiscreen.org/dial-registry/namespace-database) site.
 
-JDial has no dependencies to any library and can therefore integrated in every program and app.
+JDial has no dependencies to any library and can therefore be integrated in every program and app.
 
 # Dependency declaration
 
