@@ -6,7 +6,7 @@
 
     <groupId>de.w3is</groupId>
     <artifactId>jdial</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
 
     <name>JDial</name>
     <description>A DIAL client implementation in plain java</description>
@@ -166,7 +166,7 @@
                         <version>${maven-gpg-plugin.version}</version>
                         <configuration>
                             <executable>gpg2</executable>
-                            <keyname>37208A342193A9CC850B7BD03D9875133462AA7D</keyname>
+                            <keyname>C7EB08EA0C16743E14AC2AD03F07F984B4C40835</keyname>
                         </configuration>
                         <executions>
                             <execution>
