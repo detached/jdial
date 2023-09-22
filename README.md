@@ -22,13 +22,13 @@ You can find the latest releaese in the [central repository](https://search.mave
 <dependency>
     <groupId>de.w3is</groupId>
     <artifactId>jdial</artifactId>
-    <version>1.3</version>
+    <version>1.4</version>
 </dependency>
 ```
 ## Gradle
 
 ```
-compile 'de.w3is:jdial:1.3'
+implementation 'de.w3is:jdial:1.4'
 ```
 
 # Usage
