@@ -14,7 +14,7 @@ JDial has no dependencies to any library and can therefore be integrated in ever
 
 # Dependency declaration
 
-You can find the latest releaese in the [central repository](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.w3is%22%20a%3A%22jdial%22).
+You can find the latest release in the [sonatype repository](https://central.sonatype.com/artifact/de.w3is/jdial).
 
 ## Maven
 
@@ -22,13 +22,13 @@ You can find the latest releaese in the [central repository](https://search.mave
 <dependency>
     <groupId>de.w3is</groupId>
     <artifactId>jdial</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
 </dependency>
 ```
 ## Gradle
 
 ```
-implementation 'de.w3is:jdial:1.4'
+implementation 'de.w3is:jdial:1.5'
 ```
 
 # Usage
