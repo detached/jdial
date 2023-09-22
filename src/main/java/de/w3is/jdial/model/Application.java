@@ -26,7 +26,6 @@ import java.net.URL;
 /**
  * The Application class represents an app that can be
  * run on a first-screen device.
- *
  * For all reserved DIAL application names see the
  * <a href="http://www.dial-multiscreen.org/dial-registry/namespace-database">namespace database</a>
  *
