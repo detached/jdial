@@ -37,6 +37,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static de.w3is.jdial.protocol.XMLUtil.getDocumentFromStream;
 import static de.w3is.jdial.protocol.XMLUtil.getTextFromSub;
 
 /**
@@ -98,7 +99,7 @@ class ApplicationResourceImpl implements ApplicationResource {
 
         try (InputStream inputStream = httpUrlConnection.getInputStream()) {
 
-            Document serviceDocument = getServiceDocument(inputStream);
+            Document serviceDocument = getDocumentFromStream(inputStream);
 
             Application application = new Application();
             application.setName(getTextFromSub(serviceDocument, "name"));
@@ -198,17 +199,6 @@ class ApplicationResourceImpl implements ApplicationResource {
             throw new ApplicationResourceException("Could not hide the application. Status: " +
                     httpURLConnection.getResponseCode());
         }
-    }
-
-    private Document getServiceDocument(InputStream inputStream) throws IOException, ParserConfigurationException, SAXException {
-
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(inputStream);
-
-        document.getDocumentElement().normalize();
-
-        return document;
     }
 
     private Node extractAdditionalData(Document document) {

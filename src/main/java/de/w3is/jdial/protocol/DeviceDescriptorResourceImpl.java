@@ -21,8 +21,6 @@ import de.w3is.jdial.protocol.model.DeviceDescriptor;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +29,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static de.w3is.jdial.protocol.XMLUtil.getDocumentFromStream;
 import static de.w3is.jdial.protocol.XMLUtil.getTextFromSub;
 
 /**
@@ -84,9 +83,7 @@ class DeviceDescriptorResourceImpl implements DeviceDescriptorResource {
 
         try (InputStream inputStream = connection.getInputStream()) {
 
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document bodyDocument = documentBuilder.parse(inputStream);
+            Document bodyDocument = getDocumentFromStream(inputStream);
 
             bodyDocument.getDocumentElement().normalize();
 
