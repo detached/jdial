@@ -31,7 +31,7 @@ public class ProtocolFactoryImpl implements ProtocolFactory {
     private int httpClientReadTimeoutMs = 1500;
     private int httpClientConnectionTimeoutMs = 1500;
     private int socketTimeoutMs = 1500;
-    private int mSearchResponseDelay = 0;
+    private int mSearchResponseDelay = 1;
 
     public ProtocolFactoryImpl(boolean legacyCompatibility) {
 
