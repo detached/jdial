@@ -56,7 +56,7 @@ class MSearchImpl implements MSearch {
                 "MAN: \"ssdp:discover\"\r\n" +
                 "MX: " + responseDelay + "\r\n" +
                 SEARCH_TARGET_HEADER + ": " + SEARCH_TARGET_HEADER_VALUE + "\r\n" +
-                "USER-AGENT: OS/version product/version\r\n";
+                "USER-AGENT: OS/version product/version\r\n\r\n";
 
         this.socketTimeoutMs = socketTimeoutMs;
     }
