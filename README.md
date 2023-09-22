@@ -22,13 +22,13 @@ You can find the latest release in the [sonatype repository](https://central.son
 <dependency>
     <groupId>de.w3is</groupId>
     <artifactId>jdial</artifactId>
-    <version>1.5</version>
+    <version>1.6</version>
 </dependency>
 ```
 ## Gradle
 
 ```
-implementation 'de.w3is:jdial:1.5'
+implementation 'de.w3is:jdial:1.6'
 ```
 
 # Usage
