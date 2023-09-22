@@ -35,8 +35,8 @@ class URLBuilder {
     private String host = "localhost";
     private int port = 80;
 
-    private StringBuilder paths = new StringBuilder();
-    private StringBuilder query = new StringBuilder();
+    private final StringBuilder paths = new StringBuilder();
+    private final StringBuilder query = new StringBuilder();
 
     private URLBuilder() {}
 
@@ -102,7 +102,7 @@ class URLBuilder {
 
     URL build() throws MalformedURLException {
 
-        String joinedPath = paths.toString() + query.toString();
+        String joinedPath = paths + query.toString();
 
         return new URL(protocol, host, port, joinedPath);
     }

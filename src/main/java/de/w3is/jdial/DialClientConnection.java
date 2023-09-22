@@ -38,7 +38,7 @@ public class DialClientConnection {
 
     private static final Logger LOGGER = Logger.getLogger(DialClientConnection.class.getName());
 
-    private ApplicationResource applicationResource;
+    private final ApplicationResource applicationResource;
 
     DialClientConnection(ApplicationResource applicationResource) {
         this.applicationResource = applicationResource;

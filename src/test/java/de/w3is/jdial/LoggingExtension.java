@@ -12,7 +12,7 @@ public class LoggingExtension implements TestInstancePostProcessor {
 
 
     @Override
-    public void postProcessTestInstance(Object o, ExtensionContext extensionContext) throws Exception {
+    public void postProcessTestInstance(Object o, ExtensionContext extensionContext) {
 
         Logger rootLogger = LogManager.getLogManager().getLogger("");
         rootLogger.setLevel(Level.FINEST);

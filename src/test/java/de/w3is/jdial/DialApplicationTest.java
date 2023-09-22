@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +34,7 @@ class DialApplicationTest {
 
             @Override
             public byte[] getData() {
-                return "{}".getBytes(Charset.forName("UTF-8"));
+                return "{}".getBytes(StandardCharsets.UTF_8);
             }
         };
 
