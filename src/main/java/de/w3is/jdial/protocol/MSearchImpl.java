@@ -70,39 +70,40 @@ class MSearchImpl implements MSearch {
 
         DatagramPacket requestPacket = new DatagramPacket(requestBuffer, requestBuffer.length, inetAddress, MULTICAST_PORT);
 
-        MulticastSocket socket = new MulticastSocket(MULTICAST_PORT);
-        socket.setReuseAddress(true);
-        socket.setSoTimeout(socketTimeoutMs);
-        socket.joinGroup(inetAddress);
+        try (MulticastSocket socket = new MulticastSocket(MULTICAST_PORT)) {
+            socket.setReuseAddress(true);
+            socket.setSoTimeout(socketTimeoutMs);
+            socket.joinGroup(inetAddress);
 
-        LOGGER.log(Level.FINE, "Send M-SEARCH request");
-        socket.send(requestPacket);
+            LOGGER.log(Level.FINE, "Send M-SEARCH request");
+            socket.send(requestPacket);
 
-        Map<String, DialServer> discoveredDevicesByNames = new HashMap<>();
+            Map<String, DialServer> discoveredDevicesByNames = new HashMap<>();
 
-        try {
-            while (true) {
+            try {
+                while (true) {
 
-                byte[] responseBuffer = new byte[1024];
-                DatagramPacket responsePacket = new DatagramPacket(responseBuffer, responseBuffer.length);
-                socket.receive(responsePacket);
+                    byte[] responseBuffer = new byte[1024];
+                    DatagramPacket responsePacket = new DatagramPacket(responseBuffer, responseBuffer.length);
+                    socket.receive(responsePacket);
 
-                DialServer dialServer = toServer(responsePacket);
+                    DialServer dialServer = toServer(responsePacket);
 
-                if (dialServer != null) {
-                    if (!discoveredDevicesByNames.containsKey(dialServer.getUniqueServiceName())) {
-                        LOGGER.log(Level.FINE, "Found device: " + dialServer.toString());
-                        discoveredDevicesByNames.put(dialServer.getUniqueServiceName(), dialServer);
+                    if (dialServer != null) {
+                        if (!discoveredDevicesByNames.containsKey(dialServer.getUniqueServiceName())) {
+                            LOGGER.log(Level.FINE, "Found device: " + dialServer);
+                            discoveredDevicesByNames.put(dialServer.getUniqueServiceName(), dialServer);
+                        }
                     }
+
                 }
+            } catch (SocketTimeoutException e) {
 
+                LOGGER.log(Level.FINER, "Socket timed out: ", e);
             }
-        } catch (SocketTimeoutException e) {
 
-            LOGGER.log(Level.FINER, "Socket timed out: ", e);
+            return new ArrayList<>(discoveredDevicesByNames.values());
         }
-
-        return new ArrayList<>(discoveredDevicesByNames.values());
     }
 
     private DialServer toServer(DatagramPacket packet) {
@@ -146,7 +147,7 @@ class MSearchImpl implements MSearch {
         }
 
         if (dialServer.getDeviceDescriptorUrl() != null
-                && dialServer.getUniqueServiceName() != null && dialServer.getUniqueServiceName().length() > 0) {
+                && dialServer.getUniqueServiceName() != null && !dialServer.getUniqueServiceName().isEmpty()) {
 
             return dialServer;
         } else {
