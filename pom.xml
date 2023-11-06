@@ -20,7 +20,7 @@
         <lombok.version>1.18.30</lombok.version>
         <junit-jupiter.version>5.10.0</junit-jupiter.version>
         <assertj-core.version>3.24.2</assertj-core.version>
-        <mockito-core.version>5.5.0</mockito-core.version>
+        <mockito-core.version>5.7.0</mockito-core.version>
         <wiremock.version>3.1.0</wiremock.version>
 
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
